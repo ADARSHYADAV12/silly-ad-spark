@@ -2,14 +2,22 @@
 import React from 'react';
 import { User, Settings, Heart, Image, LogOut, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useClerk, useUser } from '@clerk/clerk-react';
 
 const DashboardSidebar = () => {
+  const { signOut } = useClerk();
+  const { user } = useUser();
+
   const navItems = [
     { icon: Sparkles, label: 'Generate New Ad', active: true },
     { icon: Image, label: 'My Ads' },
     { icon: Heart, label: 'Favorites' },
     { icon: Settings, label: 'Settings' },
   ];
+
+  const handleSignOut = () => {
+    signOut();
+  };
 
   return (
     <div className="fixed left-0 top-0 h-screen w-64 bg-white shadow-xl border-r-4 border-teal-300 z-40">
@@ -27,10 +35,20 @@ const DashboardSidebar = () => {
       <div className="p-6 border-b border-teal-100">
         <div className="flex items-center space-x-3">
           <div className="w-12 h-12 bg-gradient-to-br from-teal-400 to-yellow-400 rounded-full flex items-center justify-center">
-            <User className="w-6 h-6 text-white" />
+            {user?.imageUrl ? (
+              <img 
+                src={user.imageUrl} 
+                alt={user.firstName || 'User'} 
+                className="w-12 h-12 rounded-full object-cover"
+              />
+            ) : (
+              <User className="w-6 h-6 text-white" />
+            )}
           </div>
           <div>
-            <p className="font-semibold text-gray-900">John Creator</p>
+            <p className="font-semibold text-gray-900">
+              {user?.firstName || user?.emailAddresses[0]?.emailAddress || 'User'}
+            </p>
             <p className="text-sm text-gray-500">Pro Member</p>
           </div>
         </div>
@@ -56,6 +74,7 @@ const DashboardSidebar = () => {
       {/* Logout Button */}
       <div className="absolute bottom-6 left-4 right-4">
         <Button 
+          onClick={handleSignOut}
           variant="ghost" 
           className="w-full flex items-center space-x-2 text-gray-600 hover:text-red-600 hover:bg-red-50"
         >
