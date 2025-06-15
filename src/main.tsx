@@ -3,18 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
-
-let ClerkProvider: any = null;
-
-if (import.meta.env.DEV) {
-  // Only import ClerkProvider dynamically if it's installed
-  try {
-    ClerkProvider = require('@clerk/clerk-react').ClerkProvider;
-  } catch {}
-} else {
-  // In production, normal import (will be tree-shaken if not used)
-  ClerkProvider = require('@clerk/clerk-react').ClerkProvider;
-}
+import { ClerkProvider } from '@clerk/clerk-react'
 
 // Fetch the key from the Supabase Edge Function
 const fetchClerkKey = async () => {
@@ -43,7 +32,7 @@ const ClerkProviderWrapper = () => {
       });
   }, []);
 
-  if (!clerkKey || !ClerkProvider) {
+  if (!clerkKey) {
     // Optional: a loading spinner here
     return <div className="w-full min-h-screen flex items-center justify-center text-xl">Loading authentication…</div>;
   }
