@@ -2,9 +2,15 @@
 import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleGenerateAd = () => {
+    navigate('/dashboard');
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-purple-100 shadow-sm">
@@ -29,7 +35,10 @@ const Header = () => {
 
           {/* CTA Button */}
           <div className="hidden md:block">
-            <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold px-6 py-2 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg">
+            <Button 
+              onClick={handleGenerateAd}
+              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold px-6 py-2 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg"
+            >
               🎨 Generate a Silly Ad
             </Button>
           </div>
@@ -52,7 +61,10 @@ const Header = () => {
               <a href="#pricing" className="text-gray-700 hover:text-purple-600 transition-colors">Pricing</a>
               <a href="#faq" className="text-gray-700 hover:text-purple-600 transition-colors">FAQ</a>
               <a href="#login" className="text-gray-700 hover:text-purple-600 transition-colors">Login</a>
-              <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold px-6 py-2 rounded-full mt-4">
+              <Button 
+                onClick={handleGenerateAd}
+                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold px-6 py-2 rounded-full mt-4"
+              >
                 🎨 Generate a Silly Ad
               </Button>
             </nav>
