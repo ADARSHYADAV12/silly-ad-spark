@@ -1,8 +1,10 @@
 
-import React from 'react';
-import { User, Settings, Heart, Image, LogOut, Sparkles } from 'lucide-react';
+import React, { useMemo } from 'react';
+import { Settings, Heart, Image, LogOut, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { NavLink, useLocation } from 'react-router-dom';
+import { useUser } from '@clerk/clerk-react';
+import UserProfileSidebar from './UserProfileSidebar';
 
 const navItems = [
   {
@@ -47,20 +49,8 @@ const DashboardSidebar = () => {
         </div>
       </div>
 
-      {/* User Profile Placeholder */}
-      <div className="p-6 border-b border-teal-100">
-        <div className="flex items-center space-x-3">
-          <div className="w-12 h-12 bg-gradient-to-br from-teal-400 to-yellow-400 rounded-full flex items-center justify-center">
-            <User className="w-6 h-6 text-white" />
-          </div>
-          <div>
-            <p className="font-semibold text-gray-900">
-              Demo User
-            </p>
-            <p className="text-sm text-gray-500">Pro Member</p>
-          </div>
-        </div>
-      </div>
+      {/* User Profile from Clerk */}
+      <UserProfileSidebar />
 
       {/* Navigation */}
       <nav className="p-4 space-y-2">
