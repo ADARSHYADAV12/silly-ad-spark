@@ -24,23 +24,23 @@ serve(async (req) => {
     
     console.log('Generating ad for:', { productName, description, style });
 
-    // Create different prompts based on style
-    let stylePrompt = '';
+    // Create different style prompts based on user selection
+    let styleContext = '';
     switch (style) {
       case 'cartoon':
-        stylePrompt = 'cartoon-style, colorful, playful, with exaggerated features';
+        styleContext = 'cartoon-style, colorful, playful, with exaggerated features';
         break;
       case 'retro':
-        stylePrompt = 'retro 1950s advertisement style, vintage colors, classic typography';
+        styleContext = 'retro 1950s advertisement style, vintage colors, classic typography';
         break;
       case 'random':
-        stylePrompt = 'completely random and unexpected style, surprise me';
+        styleContext = 'completely random and unexpected style, surprise me';
         break;
       default:
-        stylePrompt = 'fun and engaging';
+        styleContext = 'fun and engaging';
     }
 
-    // Generate silly taglines using OpenAI
+    // Generate silly taglines using GPT-4o-mini
     const taglineResponse = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -56,7 +56,7 @@ serve(async (req) => {
           },
           {
             role: 'user',
-            content: `Create 3 silly advertising taglines for "${productName}". ${description ? `Product description: ${description}` : ''} Make them funny, memorable, and ${stylePrompt}. Return them as a JSON array of strings.`
+            content: `Create 3 silly advertising taglines for "${productName}". ${description ? `Product description: ${description}` : ''} Make them funny, memorable, and ${styleContext}. Return them as a JSON array of strings.`
           }
         ],
         temperature: 0.9,
@@ -78,7 +78,7 @@ serve(async (req) => {
       ];
     }
 
-    // Generate creative concepts
+    // Generate creative concepts using GPT-4o-mini
     const conceptResponse = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -116,13 +116,72 @@ serve(async (req) => {
       ];
     }
 
-    // Create mock ad data with generated content
-    const generatedAds = taglines.slice(0, 3).map((tagline: string, index: number) => ({
-      id: index + 1,
-      image: `https://images.unsplash.com/photo-${index === 0 ? '1486312338219-ce68d2c6f44d' : index === 1 ? '1498050108023-c5249f4df085' : '1461749280684-dccba630e2f6'}?w=400&h=400&fit=crop`,
-      tagline: tagline,
-      concept: concepts[index] || `We imagined this ad as a celebration of how amazing ${productName} really is.`
-    }));
+    // Generate images using gpt-image-1 for each tagline
+    const generatedAds = await Promise.all(
+      taglines.slice(0, 3).map(async (tagline: string, index: number) => {
+        try {
+          const imagePrompt = `Create a silly, cartoon-style ad poster for a product called "${productName}".
+
+Product Description: ${description || 'An amazing product that will change your life'}
+
+Visual Instructions:
+Imagine a humorous real-life situation where this product is exaggerated in a funny way. Make it feel like something unexpected but relatable. The product should be the central hero in the scene, portrayed with personality.
+
+Style:
+Use a ${styleContext} style, bright colors, and exaggerated expressions. Think of classic 1960s print ads meets modern meme humor. 
+
+Scene Composition:
+Include a character or context that humorously dramatizes the product benefit or pain point. Place the product image visibly in the center or held by a character. Add a playful or absurd prop or setting.
+
+Text Overlay:
+At the top or center, add this headline in bold retro comic-style text: "${tagline}"  
+Make the text large and readable, with fun bubble or banner styling. Leave space at bottom right to place a logo overlay later.
+
+Style tags: cartoon, retro poster, comic book, funny, colorful, high contrast`;
+
+          console.log(`Generating image ${index + 1} with prompt:`, imagePrompt);
+
+          const imageResponse = await fetch('https://api.openai.com/v1/images/generations', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${openAIApiKey}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              model: 'gpt-image-1',
+              prompt: imagePrompt,
+              n: 1,
+              size: '1024x1024',
+              quality: 'high',
+              output_format: 'png'
+            }),
+          });
+
+          const imageData = await imageResponse.json();
+          console.log(`Image ${index + 1} response:`, imageData);
+
+          if (imageData.data && imageData.data[0]) {
+            return {
+              id: index + 1,
+              image: imageData.data[0].b64_json ? `data:image/png;base64,${imageData.data[0].b64_json}` : imageData.data[0].url,
+              tagline: tagline,
+              concept: concepts[index] || `We imagined this ad as a celebration of how amazing ${productName} really is.`
+            };
+          } else {
+            throw new Error('No image data returned');
+          }
+        } catch (imageError) {
+          console.error(`Error generating image ${index + 1}:`, imageError);
+          // Fallback to placeholder image
+          return {
+            id: index + 1,
+            image: `https://images.unsplash.com/photo-${index === 0 ? '1486312338219-ce68d2c6f44d' : index === 1 ? '1498050108023-c5249f4df085' : '1461749280684-dccba630e2f6'}?w=400&h=400&fit=crop`,
+            tagline: tagline,
+            concept: concepts[index] || `We imagined this ad as a celebration of how amazing ${productName} really is.`
+          };
+        }
+      })
+    );
 
     console.log('Generated ads:', generatedAds);
 
