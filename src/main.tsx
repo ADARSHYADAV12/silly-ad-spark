@@ -4,7 +4,9 @@ import { ClerkProvider } from "@clerk/clerk-react";
 import App from './App.tsx'
 import './index.css'
 
-// Only access the Clerk publishable key from Supabase secrets via Lovable's environment
+// Debug: Output all secrets right before using them
+console.log("DEBUG: globalThis.__LOVABLE_SECRETS__", (globalThis as any).__LOVABLE_SECRETS__);
+
 const PUBLISHABLE_KEY = (globalThis as any).__LOVABLE_SECRETS__?.VITE_CLERK_PUBLISHABLE_KEY;
 
 if (!PUBLISHABLE_KEY) {
