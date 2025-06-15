@@ -1,4 +1,3 @@
-
 import { createRoot } from 'react-dom/client'
 import { ClerkProvider } from "@clerk/clerk-react";
 import App from './App.tsx'
@@ -7,11 +6,12 @@ import './index.css'
 // Debug: Output all secrets right before using them
 console.log("DEBUG: globalThis.__LOVABLE_SECRETS__", (globalThis as any).__LOVABLE_SECRETS__);
 
-const PUBLISHABLE_KEY = (globalThis as any).__LOVABLE_SECRETS__?.VITE_CLERK_PUBLISHABLE_KEY;
+// Hardcoded Clerk publishable key (temporary)
+const PUBLISHABLE_KEY = "pk_test_HKoQE36HtLF5197bKMEQxNCRg85tBk5mcLUj99nPoxTR";
 
 if (!PUBLISHABLE_KEY) {
-  console.error("Available secrets:", (globalThis as any).__LOVABLE_SECRETS__);
-  throw new Error("Missing Clerk Publishable Key - Please ensure VITE_CLERK_PUBLISHABLE_KEY is properly set in Supabase secrets");
+  console.error("Clerk Publishable Key is not set.");
+  throw new Error("Missing Clerk Publishable Key - Please ensure it is set.");
 }
 
 createRoot(document.getElementById("root")!).render(
