@@ -57,21 +57,23 @@ const InputSection = ({ onGenerate, isGenerating }: InputSectionProps) => {
                 Product Image *
               </label>
               <div className="relative group">
-                <div className="border-2 border-dashed border-teal-300 rounded-xl p-6 text-center hover:border-teal-400 transition-colors cursor-pointer bg-teal-50/50">
-                  <Upload className="w-8 h-8 text-teal-500 mx-auto mb-2" />
-                  <p className="text-sm text-gray-600 mb-1">Click to upload product image</p>
-                  <p className="text-xs text-gray-500">JPG, PNG up to 10MB</p>
+                <label className="cursor-pointer">
+                  <div className="border-2 border-dashed border-teal-300 rounded-xl p-6 text-center hover:border-teal-400 transition-colors bg-teal-50/50">
+                    <Upload className="w-8 h-8 text-teal-500 mx-auto mb-2" />
+                    <p className="text-sm text-gray-600 mb-1">Click to upload product image</p>
+                    <p className="text-xs text-gray-500">JPG, PNG up to 10MB</p>
+                  </div>
                   <input
                     type="file"
                     accept="image/*"
                     onChange={(e) => e.target.files?.[0] && handleFileUpload(e.target.files[0], 'product')}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    className="hidden"
                   />
-                </div>
+                </label>
                 {productImage && (
                   <p className="text-xs text-green-600 mt-1">✓ {productImage.name}</p>
                 )}
-                <div className="absolute -top-2 -right-2 bg-yellow-400 text-black text-xs px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="absolute -top-2 -right-2 bg-yellow-400 text-black text-xs px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                   The more boring, the funnier! 😄
                 </div>
               </div>
@@ -82,20 +84,24 @@ const InputSection = ({ onGenerate, isGenerating }: InputSectionProps) => {
               <label className="text-sm font-semibold text-gray-700">
                 Brand Logo (Optional)
               </label>
-              <div className="border-2 border-dashed border-yellow-300 rounded-xl p-6 text-center hover:border-yellow-400 transition-colors cursor-pointer bg-yellow-50/50">
-                <ImageIcon className="w-8 h-8 text-yellow-500 mx-auto mb-2" />
-                <p className="text-sm text-gray-600 mb-1">Upload your logo</p>
-                <p className="text-xs text-gray-500">PNG preferred</p>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => e.target.files?.[0] && handleFileUpload(e.target.files[0], 'logo')}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                />
+              <div className="relative">
+                <label className="cursor-pointer">
+                  <div className="border-2 border-dashed border-yellow-300 rounded-xl p-6 text-center hover:border-yellow-400 transition-colors bg-yellow-50/50">
+                    <ImageIcon className="w-8 h-8 text-yellow-500 mx-auto mb-2" />
+                    <p className="text-sm text-gray-600 mb-1">Upload your logo</p>
+                    <p className="text-xs text-gray-500">PNG preferred</p>
+                  </div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => e.target.files?.[0] && handleFileUpload(e.target.files[0], 'logo')}
+                    className="hidden"
+                  />
+                </label>
+                {logoImage && (
+                  <p className="text-xs text-green-600 mt-1">✓ {logoImage.name}</p>
+                )}
               </div>
-              {logoImage && (
-                <p className="text-xs text-green-600 mt-1">✓ {logoImage.name}</p>
-              )}
             </div>
           </div>
 
