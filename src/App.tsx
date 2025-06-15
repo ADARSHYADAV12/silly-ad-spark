@@ -10,12 +10,28 @@ import NotFound from "./pages/NotFound";
 import MyAds from "./pages/MyAds";
 import Favorites from "./pages/Favorites";
 import Settings from "./pages/Settings";
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  SignUpButton,
+  UserButton,
+} from "@clerk/clerk-react";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
+      <header style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '1rem' }}>
+        <SignedOut>
+          <SignInButton />
+          <SignUpButton />
+        </SignedOut>
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
+      </header>
       <Toaster />
       <Sonner />
       <BrowserRouter>
