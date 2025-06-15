@@ -2,12 +2,8 @@
 import React from 'react';
 import { User, Settings, Heart, Image, LogOut, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useClerk, useUser } from '@clerk/clerk-react';
 
 const DashboardSidebar = () => {
-  const { signOut } = useClerk();
-  const { user } = useUser();
-
   const navItems = [
     { icon: Sparkles, label: 'Generate New Ad', active: true },
     { icon: Image, label: 'My Ads' },
@@ -15,8 +11,9 @@ const DashboardSidebar = () => {
     { icon: Settings, label: 'Settings' },
   ];
 
+  // Placeholder sign out handler (not functional since there's no auth)
   const handleSignOut = () => {
-    signOut();
+    // No-op
   };
 
   return (
@@ -31,23 +28,15 @@ const DashboardSidebar = () => {
         </div>
       </div>
 
-      {/* User Profile */}
+      {/* User Profile Placeholder */}
       <div className="p-6 border-b border-teal-100">
         <div className="flex items-center space-x-3">
           <div className="w-12 h-12 bg-gradient-to-br from-teal-400 to-yellow-400 rounded-full flex items-center justify-center">
-            {user?.imageUrl ? (
-              <img 
-                src={user.imageUrl} 
-                alt={user.firstName || 'User'} 
-                className="w-12 h-12 rounded-full object-cover"
-              />
-            ) : (
-              <User className="w-6 h-6 text-white" />
-            )}
+            <User className="w-6 h-6 text-white" />
           </div>
           <div>
             <p className="font-semibold text-gray-900">
-              {user?.firstName || user?.emailAddresses[0]?.emailAddress || 'User'}
+              Demo User
             </p>
             <p className="text-sm text-gray-500">Pro Member</p>
           </div>
@@ -71,7 +60,7 @@ const DashboardSidebar = () => {
         ))}
       </nav>
 
-      {/* Logout Button */}
+      {/* Logout Button (nonfunctional) */}
       <div className="absolute bottom-6 left-4 right-4">
         <Button 
           onClick={handleSignOut}
