@@ -4,10 +4,15 @@ import { ClerkProvider } from "@clerk/clerk-react";
 import App from './App.tsx'
 import './index.css'
 
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+// For Lovable with Supabase integration, we need to access the secret from the environment
+// The secret should be available as a regular environment variable
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY || 
+                        (globalThis as any).__LOVABLE_SECRETS__?.VITE_CLERK_PUBLISHABLE_KEY;
 
 if (!PUBLISHABLE_KEY) {
-  throw new Error("Missing Clerk Publishable Key - Please check that VITE_CLERK_PUBLISHABLE_KEY is set in your environment variables");
+  console.error("Environment variables:", import.meta.env);
+  console.error("Available secrets:", (globalThis as any).__LOVABLE_SECRETS__);
+  throw new Error("Missing Clerk Publishable Key - Please ensure VITE_CLERK_PUBLISHABLE_KEY is properly set in Supabase secrets");
 }
 
 createRoot(document.getElementById("root")!).render(
