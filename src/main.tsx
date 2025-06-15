@@ -5,12 +5,16 @@ import App from './App.tsx'
 import './index.css'
 import { ClerkProvider } from '@clerk/clerk-react'
 
-// Get the publishable key from the environment variable (recommended by Clerk docs)
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
+// 1. Prefer the hardcoded key
+const HARDCODED_CLERK_KEY = "pk_test_HKoQE36HtLF5197bKMEQxNCRg85tBk5mcLUj99nPoxTR"
+// 2. Fallback to ENV variable
+const ENV_CLERK_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
+
+// 3. Use the hardcoded key if it exists, else fallback, else error
+const PUBLISHABLE_KEY = HARDCODED_CLERK_KEY || ENV_CLERK_KEY
 
 if (!PUBLISHABLE_KEY) {
-  // Add extra debug info for deployment troubleshooting
-  console.error("Missing Clerk Publishable Key. Please ensure you have it set in the .env file as VITE_CLERK_PUBLISHABLE_KEY or in your deployment environment.");
+  console.error("Missing Clerk Publishable Key. Please ensure that you have either hardcoded it or set it as VITE_CLERK_PUBLISHABLE_KEY in your environment.");
   throw new Error("Missing Clerk Publishable Key");
 }
 
