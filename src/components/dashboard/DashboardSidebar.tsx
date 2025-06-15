@@ -2,14 +2,33 @@
 import React from 'react';
 import { User, Settings, Heart, Image, LogOut, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { NavLink, useLocation } from 'react-router-dom';
+
+const navItems = [
+  {
+    icon: Sparkles,
+    label: 'Generate New Ad',
+    to: '/dashboard',
+  },
+  {
+    icon: Image,
+    label: 'My Ads',
+    to: '/dashboard/my-ads',
+  },
+  {
+    icon: Heart,
+    label: 'Favorites',
+    to: '/dashboard/favorites',
+  },
+  {
+    icon: Settings,
+    label: 'Settings',
+    to: '/dashboard/settings',
+  },
+];
 
 const DashboardSidebar = () => {
-  const navItems = [
-    { icon: Sparkles, label: 'Generate New Ad', active: true },
-    { icon: Image, label: 'My Ads' },
-    { icon: Heart, label: 'Favorites' },
-    { icon: Settings, label: 'Settings' },
-  ];
+  const location = useLocation();
 
   // Placeholder sign out handler (not functional since there's no auth)
   const handleSignOut = () => {
@@ -46,17 +65,21 @@ const DashboardSidebar = () => {
       {/* Navigation */}
       <nav className="p-4 space-y-2">
         {navItems.map((item, index) => (
-          <button
+          <NavLink
             key={index}
-            className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 text-left ${
-              item.active
-                ? 'bg-gradient-to-r from-teal-100 to-yellow-100 text-teal-700 font-semibold border-2 border-teal-200'
-                : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
-            }`}
+            to={item.to}
+            end={item.to === '/dashboard'}
+            className={({ isActive }) =>
+              `w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 text-left ${
+                isActive || (item.to === '/dashboard' && location.pathname === '/dashboard')
+                  ? 'bg-gradient-to-r from-teal-100 to-yellow-100 text-teal-700 font-semibold border-2 border-teal-200'
+                  : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+              }`
+            }
           >
             <item.icon className="w-5 h-5" />
             <span>{item.label}</span>
-          </button>
+          </NavLink>
         ))}
       </nav>
 
